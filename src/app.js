@@ -8,6 +8,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const csurf = require("csurf");
+const authenticate = require("../app/middleware/authentication");
 
 const privateRoutes = require("../app/routes/private/index");
 const publicRoutes = require("../app/routes/public/index");
@@ -86,7 +87,7 @@ app.get("/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-app.use("/api", csrfProtection, privateRoutes);
+app.use("/api", authenticate, csrfProtection, privateRoutes);
 
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
