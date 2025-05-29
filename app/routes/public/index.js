@@ -24,7 +24,7 @@ router.route("/register").post(createUserSchema, async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    res.status(error.statusCode).json({ message: error.message });
   }
 });
 
@@ -45,7 +45,7 @@ router.route("/login").post(loginSchema, async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    res.status(error.statusCode).json({ message: error.message });
   }
 });
 

@@ -1,6 +1,7 @@
 const sequelize = require("../database/index");
 const UserService = require("../services/user.service");
-const UserRepository = require("../repository/user.repository");
+
+const { validateUser } = require("../utils/validate");
 
 const createUser = async (payload) => {
   const transaction = await sequelize.transaction();
@@ -15,14 +16,8 @@ const createUser = async (payload) => {
 };
 
 const login = async (payload) => {
-  const { email } = payload;
-  const existingUser = await UserRepository.getUser({ where: { email } });
+  const existingUser = await validateUser(payload);
 
-  if (!existingUser) {
-    const error = new Error("Invalid credentials");
-    error.statusCode = 401;
-    throw error;
-  }
   const result = await UserService.login({ ...payload, user: existingUser });
 
   return result;

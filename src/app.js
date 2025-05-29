@@ -87,6 +87,7 @@ app.get("/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
+// app.use("/api", authenticate, csrfProtection, privateRoutes);
 app.use("/api", authenticate, csrfProtection, privateRoutes);
 
 app.use((err, req, res, next) => {
