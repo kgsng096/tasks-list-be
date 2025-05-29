@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "admin",
+    "database": "tasks_app",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}

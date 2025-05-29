@@ -1,16 +1,30 @@
 {
   "scripts": {
     "start": "npm run migrate-and-seed && node app.js",
-    "dev": "nodemon app.js"
+    "dev:init": "npm run migrate-and-seed && nodemon server.js",
+    "dev": "nodemon server.js",
+    "migrate-and-seed": "npm run migrate:dev && npm run seed:dev",
+    "migrate:dev": " sequelize --options-path ./.sequelizerc db:migrate",
+    "migrate:dev:undo": " sequelize --options-path ./.sequelizerc db:migrate:undo --name",
+    "migrate:dev:undo:all": " sequelize --options-path ./.sequelizerc db:migrate:undo:all",
+    "seed:dev": "sequelize db:seed:all",
+    "seed:dev:undo": "sequelize db:seed:undo --seed",
+    "seed:dev:undo:all": "sequelize db:seed:undo:all"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "morgan": "^1.10.0",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3"
   }
 }
