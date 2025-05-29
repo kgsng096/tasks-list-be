@@ -14,6 +14,21 @@ const createUser = async (payload) => {
   }
 };
 
+const login = async (payload) => {
+  const { email } = payload;
+  const existingUser = await UserRepository.getUser({ where: { email } });
+
+  if (!existingUser) {
+    const error = new Error("Invalid credentials");
+    error.statusCode = 401;
+    throw error;
+  }
+  const result = await UserService.login({ ...payload, user: existingUser });
+
+  return result;
+};
+
 module.exports = {
   createUser,
+  login,
 };

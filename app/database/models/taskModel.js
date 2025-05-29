@@ -1,41 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-  const UserModel = sequelize.define(
-    "UserModel",
+  const TaskModel = sequelize.define(
+    "TaskModel",
     {
       id: {
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        allowNull: false,
       },
-      firstName: {
-        type: Sequelize.STRING,
-        field: "first_name",
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        field: "last_name",
-      },
-      email: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-        unique: true,
-        indexes: [{ unique: true, fields: ["email"] }],
-      },
-      password: {
+      name: {
         type: Sequelize.STRING,
       },
-      roleId: {
+      userId: {
         type: Sequelize.INTEGER,
+        field: "user_id",
         allowNull: false,
-        references: {
-          model: "role",
-          key: "id",
-        },
         validate: {
           isInt: true,
         },
-        field: "role_id",
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -53,7 +35,7 @@ module.exports = (sequelize, Sequelize) => {
     {
       timestamps: true,
       underscored: true,
-      tableName: "users",
+      tableName: "tasks",
     }
   );
 
@@ -61,10 +43,12 @@ module.exports = (sequelize, Sequelize) => {
   /*                                Associations                                */
   /* -------------------------------------------------------------------------- */
 
-  UserModel.associate = (models) => {
-    UserModel.belongsTo(models.RoleModel, { foreignKey: "roleId", as: "role" });
-    UserModel.hasMany(models.TaskModel, { foreignKey: "userId", as: "tasks" });
+  TaskModel.associate = (models) => {
+    TaskModel.belongsTo(models.UserModel, {
+      foreignKey: "userId",
+      as: "tasks",
+    });
   };
 
-  return UserModel;
+  return TaskModel;
 };

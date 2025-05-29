@@ -24,6 +24,12 @@ const createUserSchema = [
   body("password").isLength({ min: 5 }),
 ];
 
+const loginSchema = [
+  body("password").isLength({ min: 5 }),
+  body("email").isEmail().normalizeEmail().withMessage("Invalid email format."),
+];
+
 module.exports = {
   createUserSchema,
+  loginSchema,
 };
