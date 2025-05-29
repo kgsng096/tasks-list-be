@@ -3,6 +3,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require("path");
 
 //local imports
 const routes = require("../app/routes/index");
@@ -11,19 +12,28 @@ const app = express();
 
 const swaggerOptions = {
   swaggerDefinition: {
-    myapi: "3.0.0",
+    openapi: "3.0.0",
     info: {
       title: "My API",
       version: "1.0.0",
-      description: "API documentation",
+      description: "API documentation using Swagger",
     },
     servers: [
       {
-        url: "http://localhost:4000",
+        url: `http://localhost:${process.env.PORT}/api`,
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
-  apis: ["./src/routes/*.js"],
+  apis: [path.join(__dirname, "../app/routes/*.js")],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -33,10 +43,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Routes
-app.use("/v1", routes);
-
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use("/api", routes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

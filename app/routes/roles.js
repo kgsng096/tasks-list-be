@@ -5,12 +5,12 @@ const { getAllRoles } = require("../controller/role.controller");
 
 /**
  * @swagger
- * /v1/users:
+ * /roles:
  *   get:
- *     summary: Retrieve a list of users
+ *     summary: Retrieve a list of roles
  *     responses:
  *       200:
- *         description: A list of users
+ *         description: A list of roles
  */
 
 router.route("/").get(async (req, res) => {
