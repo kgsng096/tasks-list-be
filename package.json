@@ -1,5 +1,12 @@
 {
+  "scripts": {
+    "start": "npm run migrate-and-seed && node app.js",
+    "dev": "nodemon app.js"
+  },
   "dependencies": {
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
