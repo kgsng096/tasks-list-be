@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 //local imports
-const routes = require("./routes/index");
+const routes = require("../app/routes/index");
 
 const app = express();
 
