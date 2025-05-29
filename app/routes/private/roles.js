@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllRoles } = require("../controller/role.controller");
+const { getAllRoles } = require("../../controller/role.controller");
 
 /**
  * @swagger

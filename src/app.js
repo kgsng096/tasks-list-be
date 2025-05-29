@@ -6,7 +6,8 @@ const cors = require("cors");
 const path = require("path");
 
 //local imports
-const routes = require("../app/routes/index");
+const privateRoutes = require("../app/routes/private/index");
+const publicRoutes = require("../app/routes/public/index");
 
 const app = express();
 
@@ -45,7 +46,8 @@ app.use(cors());
 
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use("/api", routes);
+app.use("/api", privateRoutes);
+app.use("/", publicRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

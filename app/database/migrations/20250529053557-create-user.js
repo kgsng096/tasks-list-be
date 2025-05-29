@@ -11,12 +11,21 @@ module.exports = {
       },
       firstName: {
         type: Sequelize.STRING,
+        field: "first_name",
       },
       lastName: {
         type: Sequelize.STRING,
+        field: "last_name",
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,
+      },
+      password: {
+        type: Sequelize.STRING,
+        get() {
+          return () => this.getDataValue("password");
+        },
       },
       roleId: {
         type: Sequelize.INTEGER,
@@ -41,6 +50,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable("users");
   },
 };

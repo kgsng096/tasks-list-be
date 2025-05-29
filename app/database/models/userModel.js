@@ -8,19 +8,25 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING(100),
+      firstName: {
+        type: Sequelize.STRING,
+        field: "first_name",
       },
-      country: {
-        allowNull: false,
-        type: Sequelize.STRING(100),
+      lastName: {
+        type: Sequelize.STRING,
+        field: "last_name",
       },
       email: {
         type: Sequelize.STRING(255),
         allowNull: true,
         unique: true,
         indexes: [{ unique: true, fields: ["email"] }],
+      },
+      password: {
+        type: Sequelize.STRING,
+        get() {
+          return () => this.getDataValue("password");
+        },
       },
       roleId: {
         type: Sequelize.INTEGER,
@@ -32,6 +38,7 @@ module.exports = (sequelize, Sequelize) => {
         validate: {
           isInt: true,
         },
+        field: "role_id",
       },
       createdAt: {
         type: Sequelize.DATE,
