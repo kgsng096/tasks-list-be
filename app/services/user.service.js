@@ -1,4 +1,5 @@
 const UserRepository = require("../repository/user.repository");
+const bcrypt = require("bcryptjs");
 
 class RoleService {
   async createUser(payload) {
@@ -9,11 +10,18 @@ class RoleService {
     if (existingUser) {
       const error = new Error("Email already exists");
       error.statusCode = 409;
-
       throw error;
     }
 
-    const result = await UserRepository.createUser({ ...payload });
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(payload.password, saltRounds);
+
+    const userPayload = {
+      ...payload,
+      password: hashedPassword,
+    };
+
+    const result = await UserRepository.createUser(userPayload);
 
     return result;
   }
