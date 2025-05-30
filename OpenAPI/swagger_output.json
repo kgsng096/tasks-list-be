@@ -88,6 +88,19 @@
         }
       }
     },
+    "/roles": {
+      "get": {
+        "tags": [
+          "Public - Roles"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/roles/": {
       "get": {
         "tags": [

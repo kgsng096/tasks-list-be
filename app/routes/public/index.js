@@ -3,6 +3,7 @@ const router = express.Router();
 const { validationResult } = require("express-validator");
 
 const { createUser, login } = require("../../controller/user.controller");
+const { getAllRoles } = require("../../controller/role.controller");
 const {
   createUserSchema,
   loginSchema,
