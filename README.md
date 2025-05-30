@@ -20,49 +20,57 @@ A Node.js/Express backend for a task management application, featuring authentic
 - [npm](https://www.npmjs.com/)
 - [Docker](https://www.docker.com/) (for running Postgres easily)
 
-### Installation
+### Running the App
 
-1. **Clone the repository:**
+#### Option 1: Using Docker Compose (Recommended)
 
+1. **Copy environment variables:**
    ```sh
-   git clone https://github.com/your-username/tasks-list-be.git
-   cd tasks-list-be/backend
+   cp .env_example .env
    ```
 
-2. **Install dependencies:**
+2. **Start the backend and database:**
+   ```sh
+   docker-compose up --build
+   ```
+   This will build the backend image and start both the backend and PostgreSQL containers.
 
+3. **Access the API:**  
+   The backend will be available at [http://localhost:5000](http://localhost:5000).
+
+#### Option 2: Run Manually (Locally)
+
+1. **Install dependencies:**
    ```sh
    npm install
    ```
 
-3. **Set up environment variables:**
-
-   - Copy `.env.example` to `.env` and fill in your configuration (DB connection, JWT secret, etc.).
-
-4. **Start PostgreSQL with Docker (optional):**
-
+2. **Start PostgreSQL**  
+   You can use Docker or a local installation. Example with Docker:
    ```sh
-   docker-compose up -d
+   docker run --name tasks-list -e POSTGRES_DB=tasks_app -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:13
    ```
 
-   Or run Postgres manually if you prefer.
+3. **Set up environment variables:**  
+   Copy `.env_example` to `.env` and update as needed.
 
-5. **Run database migrations (if applicable):**
-
+4. **Run database migrations (if applicable):**
    ```sh
    npm run migrate
    ```
 
-6. **Start the server:**
+5. **Start the backend:**
    ```sh
    npm run dev:init
    ```
-   The server will start on [http://localhost:5000].
+
+6. **Access the API:**  
+   The backend will be available at [http://localhost:5000](http://localhost:5000).
 
 ## API Documentation
 
 - **Swagger UI:**  
-  Visit [http://localhost:5000/documents] after starting the server to view and test the API.
+  Visit [http://localhost:5000/api-docs](http://localhost:5000/api-docs) after starting the server to view and test the API.
 
 - **Regenerate Swagger docs:**  
   If you change routes or comments, regenerate the docs:

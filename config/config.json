@@ -3,7 +3,7 @@
     "username": "admin",
     "password": "admin",
     "database": "tasks_app",
-    "host": "localhost",
+    "host": "db",
     "dialect": "postgres"
   }
 }
