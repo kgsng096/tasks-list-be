@@ -71,7 +71,7 @@ class RoleService {
       include: [
         {
           model: TaskModel,
-          attributes: ["id", "name"],
+          attributes: ["id", "name", "updatedAt"],
           as: "tasks",
         },
         {
