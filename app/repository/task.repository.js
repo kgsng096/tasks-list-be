@@ -11,6 +11,21 @@ class TaskRepository {
       userId: payload.user.id,
     });
   }
+
+  async getTask(options) {
+    return await TaskModel.findOne(options);
+  }
+
+  async editTask(payload) {
+    const { body, where } = payload;
+    await TaskModel.update(body, { where });
+
+    return await this.getTask(where);
+  }
+
+  async deleteTask(options) {
+    return await TaskModel.destroy(options);
+  }
 }
 
 module.exports = new TaskRepository();
