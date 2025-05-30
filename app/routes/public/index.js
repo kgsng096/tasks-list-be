@@ -84,4 +84,10 @@ router.route("/login").post(loginSchema, async (req, res, next) => {
   }
 });
 
+router.route("/roles").get(async (req, res) => {
+  // #swagger.tags = ['Public - Roles']
+  const result = await getAllRoles();
+  res.send(result);
+});
+
 module.exports = router;
