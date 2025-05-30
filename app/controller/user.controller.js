@@ -23,7 +23,16 @@ const login = async (payload) => {
   return result;
 };
 
+const getUserTasks = async (payload) => {
+  await validateUser(payload);
+
+  const result = await UserService.getUserTasks(payload);
+
+  return result;
+};
+
 module.exports = {
   createUser,
   login,
+  getUserTasks,
 };

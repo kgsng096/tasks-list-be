@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const { createUser } = require("../../controller/user.controller");
+const { getUserTasks } = require("../../controller/user.controller");
+
+router.route("/my-tasks").get(async (req, res) => {
+  const { user } = req;
+  const result = await getUserTasks(user);
+  res.send(result);
+});
 
 module.exports = router;

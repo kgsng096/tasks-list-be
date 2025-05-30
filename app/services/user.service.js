@@ -1,6 +1,7 @@
 const UserRepository = require("../repository/user.repository");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { TaskModel, RoleModel } = require("../database/models");
 
 class RoleService {
   async createUser(payload) {
@@ -58,6 +59,32 @@ class RoleService {
         lastName: user.lastName,
         roleId: user.roleId,
       },
+    };
+  }
+
+  async getUserTasks(payload) {
+    const { email } = payload;
+
+    const result = await UserRepository.getUser({
+      where: { email },
+      attributes: ["id", "firstName", "lastName", "email"],
+      include: [
+        {
+          model: TaskModel,
+          attributes: ["id", "name"],
+          as: "tasks",
+        },
+        {
+          model: RoleModel,
+          attributes: ["id", "name"],
+          as: "role",
+        },
+      ],
+    });
+
+    return {
+      message: "Tasks retrieved successful",
+      result,
     };
   }
 }
