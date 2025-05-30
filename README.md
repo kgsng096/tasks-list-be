@@ -33,7 +33,7 @@ A Node.js/Express backend for a task management application, featuring authentic
 2. **Start the backend and database:**
 
    ```sh
-   docker-compose up --build
+   docker compose up
    ```
 
    This will build the backend image and start both the backend and PostgreSQL containers.
