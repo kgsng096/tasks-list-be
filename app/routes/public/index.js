@@ -9,6 +9,40 @@ const {
 } = require("../../entities/user.entities");
 
 router.route("/register").post(createUserSchema, async (req, res, next) => {
+  // #swagger.tags = ['Public - Auth']
+  /*  #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              firstName: {
+                type: "string",
+                example: "John"
+              },
+              lastName: {
+                type: "string",
+                example: "Doe"
+              },
+              email: {
+                type: "string",
+                example: "john.doe@gmail.com"
+              },
+              roleId: {
+                type: "integer",
+                example: 1
+              },
+              password: {
+                type: "string",
+                example: "password"
+              }
+            }
+          }
+        }
+      }
+    }
+*/
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -29,6 +63,7 @@ router.route("/register").post(createUserSchema, async (req, res, next) => {
 });
 
 router.route("/login").post(loginSchema, async (req, res, next) => {
+  // #swagger.tags = ['Public - Auth']
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

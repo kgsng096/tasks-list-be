@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npm run migrate-and-seed && node app.js",
-    "dev:init": "npm run migrate-and-seed && nodemon server.js",
+    "dev:init": "npm run migrate-and-seed && npm run swagger-autogen && nodemon server.js",
     "dev": "nodemon server.js",
     "migrate-and-seed": "npm run migrate:dev && npm run seed:dev",
     "migrate:dev": " sequelize --options-path ./.sequelizerc db:migrate",
@@ -9,7 +9,8 @@
     "migrate:dev:undo:all": " sequelize --options-path ./.sequelizerc db:migrate:undo:all",
     "seed:dev": "sequelize db:seed:all",
     "seed:dev:undo": "sequelize db:seed:undo --seed",
-    "seed:dev:undo:all": "sequelize db:seed:undo:all"
+    "seed:dev:undo:all": "sequelize db:seed:undo:all",
+    "swagger-autogen": "node swagger.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.3",
+    "swagger-autogen": "^2.23.7"
   }
 }

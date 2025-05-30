@@ -16,14 +16,33 @@ const {
 } = require("../../entities/task.entities");
 
 const { idSchema } = require("../../entities/id.entities");
-
 router
   .route("/")
   .get(async (req, res) => {
+    // #swagger.tags = ['Tasks']
+    // #swagger.parameters['id'] = { description: 'Task ID' , required: true, type: 'integer'}
     const result = await getAllTasks();
     res.send(result);
   })
   .post(createTaskSchema, async (req, res) => {
+    // #swagger.tags = ['Tasks']
+    /*  #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                example: "New Task name"
+              }
+            }
+          }
+        }
+      }
+    }
+*/
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -46,11 +65,31 @@ router
 router
   .route("/:id")
   .get(async (req, res) => {
+    // #swagger.tags = ['Tasks']
     const result = await getTask(req);
 
     res.send(result);
   })
   .put(idSchema, updateTaskSchema, async (req, res) => {
+    // #swagger.tags = ['Tasks']
+    // #swagger.parameters['id'] = { description: 'Task ID' , required: true, type: 'integer'}
+    /*  #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                example: "To change task name"
+              }
+            }
+          }
+        }
+      }
+    }
+*/
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -64,6 +103,8 @@ router
     }
   })
   .delete(idSchema, async (req, res) => {
+    // #swagger.tags = ['Tasks']
+    // #swagger.parameters['id'] = { description: 'Task ID' , required: true, type: 'integer'}
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

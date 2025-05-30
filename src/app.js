@@ -13,37 +13,11 @@ const authenticate = require("../app/middleware/authentication");
 const privateRoutes = require("../app/routes/private/index");
 const publicRoutes = require("../app/routes/public/index");
 
+const swaggerDocs = require("../OpenAPI/swagger_output.json");
+
 const app = express();
 
 require("dotenv").config();
-
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: "3.0.0",
-    info: {
-      title: "My API",
-      version: "1.0.0",
-      description: "API documentation using Swagger",
-    },
-    servers: [
-      {
-        url: `http://localhost:${process.env.PORT || 5000}/api`,
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
-  },
-  apis: [path.join(__dirname, "../app/routes/*.js")],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 app.use(
   cookieParser(
@@ -84,10 +58,10 @@ app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/", publicRoutes);
 
 app.get("/csrf-token", csrfProtection, (req, res) => {
+  // #swagger.tags = ['Public - Auth']
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// app.use("/api", authenticate, csrfProtection, privateRoutes);
 app.use("/api", authenticate, csrfProtection, privateRoutes);
 
 app.use((err, req, res, next) => {
