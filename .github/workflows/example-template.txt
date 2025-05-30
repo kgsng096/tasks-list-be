@@ -1,0 +1,132 @@
+name: Deploy Backend to Example Kubernetes
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Example: Install your CLI or login to your registry if needed
+      # - name: Install example CLI
+      #   run: echo "Install your CLI here"
+
+      - name: Log in to Example Container Registry
+        run: echo "Login to example registry here"
+
+      - name: Build and push Docker image
+        env:
+          REGISTRY_NAME: exampleregistry
+          REGISTRIES: exampleregistries
+        run: |
+          docker build -t $REGISTRY_NAME/$REGISTRIES/backend:${GITHUB_SHA::8} .
+          docker push $REGISTRY_NAME/$REGISTRIES/backend:${GITHUB_SHA::8}
+
+      - name: Save Example kubeconfig
+        run: echo "Save your kubeconfig here"
+
+      - name: Update deployment image
+        env:
+          REGISTRY_NAME: exampleregistry
+          REGISTRIES: exampleregistries
+        run: |
+          sed -i 's|image:.*|image: exampleregistry/exampleregistries/backend:'"${GITHUB_SHA::8}"'|' k8s/deployment.yaml
+
+      - name: Create image pull secret
+        run: |
+          kubectl create secret docker-registry registry-exampleregistry \
+            --docker-server=exampleregistry \
+            --docker-username=${{ secrets.EXAMPLE_REGISTRY_USERNAME }} \
+            --docker-password=${{ secrets.EXAMPLE_REGISTRY_TOKEN }} \
+            --docker-email=dev@example.com \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create and apply backend secrets
+        env:
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+        run: |
+          cat <<EOF > k8s/backend-env.yaml
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: backend-env
+          type: Opaque
+          data:
+            POSTGRES_HOST: $(echo -n "$POSTGRES_HOST" | base64 -w 0)
+            POSTGRES_PORT: $(echo -n "$POSTGRES_PORT" | base64 -w 0)
+            POSTGRES_USER: $(echo -n "$POSTGRES_USER" | base64 -w 0)
+            POSTGRES_PASSWORD: $(echo -n "$POSTGRES_PASSWORD" | base64 -w 0)
+            POSTGRES_DB: $(echo -n "$POSTGRES_DB" | base64 -w 0)
+            SESSION_SECRET: $(echo -n "$SESSION_SECRET" | base64 -w 0)
+            COOKIE_SECRET: $(echo -n "$COOKIE_SECRET" | base64 -w 0)
+          EOF
+          kubectl apply -f k8s/backend-env.yaml
+          rm k8s/backend-env.yaml
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/ingress.yaml
+          kubectl apply -f k8s/cluster-issuer.yaml
+
+      - name: Check deployment status
+        run: |
+          kubectl rollout status deployment/backend
+          kubectl get pods
+          kubectl get services
+          kubectl get ingress
+
+      - name: Wait for LoadBalancer external IP
+        run: |
+          echo "Waiting for LoadBalancer external IP..."
+          while [ -z $(kubectl get service backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}') ]; do
+            sleep 10
+          done
+          echo "External IP: $(kubectl get service backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+
+      - name: Check ingress status
+        run: |
+          echo "Ingress status:"
+          kubectl describe ingress backend-ingress
+
+      - name: Check pod logs
+        run: |
+          echo "Pod logs:"
+          kubectl logs -l app=backend --tail=100
+
+      - name: Deployment summary
+        run: |
+          echo "Deployment Summary:"
+          echo "-------------------"
+          echo "Pods:"
+          kubectl get pods -l app=backend
+          echo "\nServices:"
+          kubectl get services
+          echo "\nIngress:"
+          kubectl get ingress
+          echo "\nExternal IP:"
+          kubectl get service backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+      - name: Check pod logs (if failure)
+        if: failure()
+        run: |
+          for pod in $(kubectl get pods -l app=backend -o jsonpath='{.items[*].metadata.name}'); do
+            echo "Logs for $pod:"
+            kubectl logs $pod
+            echo "-------------------"
+          done
+
+      - name: Describe deployment (if failure)
+        if: failure()
+        run: |
+          kubectl describe deployment backend
