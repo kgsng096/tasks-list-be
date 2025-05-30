@@ -3,10 +3,8 @@ services:
     container_name: tasks-list
     hostname: postgres
     image: "postgres:13"
-    environment:
-      POSTGRES_DB: tasks_app
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+    env_file:
+      - .env_example
     ports:
       - "5432:5432"
     restart: always
