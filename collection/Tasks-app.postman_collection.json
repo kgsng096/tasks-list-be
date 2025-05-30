@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "13800293-6cb7-4eba-b380-b976f7bbb049",
+		"name": "Tasks-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40029902"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\":\"Doe\",\n    \"email\":\"john.doe@gmail.com\",\n    \"roleId\": 1,\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:5000/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"john.doe@gmail.com\",\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:5000/login"
+					},
+					"response": []
+				},
+				{
+					"name": "CSRF",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000/csrf-token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Get Roles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTIwMTAzLCJleHAiOjE3NDg1MjM3MDN9.skZS0PG2xzbVOWvRzYGXbtuDcjMjHOjN-lGSt_iL_HA"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000/roles"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Get Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTI0ODc2LCJleHAiOjE3NDg1Mjg0NzZ9.Vd4__yNzGtQmr7N9S_AZdDz1C4EslGU_7WHtQxESRcU"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000/api/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTkwOTQ0LCJleHAiOjE3NDg1OTQ1NDR9.LoAAG9-D6S04H0Dpoh9wl7qjWkNXsSEVHOJiMJmitws"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "2YOrWuJx-um1nEoVAhVs-83SlMa5-denwNWA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"I need to drink at least 2L of water per day\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:5000/api/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTcyMTk3LCJleHAiOjE3NDg1NzU3OTd9.alkwwjupTzkLR9YV2I4Kg3lEqRKZ7t7-1ls8uIJcb5E"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "2YOrWuJx-um1nEoVAhVs-83SlMa5-denwNWA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Changed name task\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:5000/api/tasks/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTczNDg3LCJleHAiOjE3NDg1NzcwODd9.ZrkEwdHvrTud5ga4bT1BbqRv-h4LTX_ajvyJwW6MwmI"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000/api/tasks/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTczNDg3LCJleHAiOjE3NDg1NzcwODd9.ZrkEwdHvrTud5ga4bT1BbqRv-h4LTX_ajvyJwW6MwmI"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "lMkzrFtm-yCshxnyq8_rOBUiwnpXa6k4BTvk",
+								"type": "text"
+							}
+						],
+						"url": "http://127.0.0.1:5000/api/tasks/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get User's Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsInJvbGVJZCI6MSwiaWF0IjoxNzQ4NTY4Mzg1LCJleHAiOjE3NDg1NzE5ODV9.0o8PEQmMSqKJXpDHQFJHaHjtbg41Nbtlh9M61J7yw1U"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000/api/users/my-tasks"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
