@@ -1,13 +1,12 @@
 const express = require("express");
+const session = require("express-session");
+const cors = require("cors");
+const morgan = require("morgan");
+const csurf = require("csurf");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const morgan = require("morgan");
-const cors = require("cors");
-const path = require("path");
 
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const csurf = require("csurf");
 const authenticate = require("../app/middleware/authentication");
 
 const privateRoutes = require("../app/routes/private/index");
@@ -30,10 +29,11 @@ app.use(
     secret:
       process.env.SESSION_SECRET || "super_secret_session_key_please_change_me",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
@@ -44,26 +44,29 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: "http://localhost:3000", // your frontend URL
     credentials: true,
   })
 );
 
 app.use(morgan("dev"));
 
-const csrfProtection = csurf({ cookie: true });
+// --- CSRF: session-based, do NOT use { cookie: true } ---
+const csrfProtection = csurf(); // session-based
 
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
 app.use("/", publicRoutes);
 
+// CSRF token endpoint
 app.get("/csrf-token", csrfProtection, (req, res) => {
   // #swagger.tags = ['Public - Auth']
   res.json({ csrfToken: req.csrfToken() });
 });
 
+// Protect all /api routes
 app.use("/api", authenticate, csrfProtection, privateRoutes);
 
+// CSRF error handler
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     console.error("CSRF Token Error:", err.message);
